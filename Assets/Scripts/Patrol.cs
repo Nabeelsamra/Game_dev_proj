@@ -19,7 +19,7 @@ public class Patrol : MonoBehaviour
 
 	public Transform pathHolder;
 	Transform player;
-	Color originalSpotlightColour;
+	Color originalSpotlightColour; //hello everyone
 
 	void Start()
 	{
