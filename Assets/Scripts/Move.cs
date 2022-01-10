@@ -2,30 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Patrol : MonoBehaviour
+public class Move : MonoBehaviour
 {
-	public static event System.Action OnGuardHasSpottedPlayer;
-
-	public float speed = 3f;
-	public float waitTime = 5f;
-	public float turnSpeed = 75f;
-	public float timeToSpotPlayer = .5f;
+	public float speed = 5;
+	public float waitTime = .3f;
+	public float turnSpeed = 90;
 
 	public Light spotlight;
 	public float viewDistance;
 	public LayerMask viewMask;
 	float viewAngle;
-	float playerVisibleTimer;
 
 	public Transform pathHolder;
 	Transform player;
 	Color originalSpotlightColour;
 
-	//private Animator anime;
-
 	void Start()
 	{
-		//anime = GetComponent<Animator>();
 		player = GameObject.FindGameObjectWithTag("Player").transform;
 		viewAngle = spotlight.spotAngle;
 		originalSpotlightColour = spotlight.color;
@@ -45,21 +38,11 @@ public class Patrol : MonoBehaviour
 	{
 		if (CanSeePlayer())
 		{
-			playerVisibleTimer += Time.deltaTime;
+			spotlight.color = Color.red;
 		}
 		else
 		{
-			playerVisibleTimer -= Time.deltaTime;
-		}
-		playerVisibleTimer = Mathf.Clamp(playerVisibleTimer, 0, timeToSpotPlayer);
-		spotlight.color = Color.Lerp(originalSpotlightColour, Color.red, playerVisibleTimer / timeToSpotPlayer);
-
-		if (playerVisibleTimer >= timeToSpotPlayer)
-		{
-			if (OnGuardHasSpottedPlayer != null)
-			{
-				OnGuardHasSpottedPlayer();
-			}
+			spotlight.color = originalSpotlightColour;
 		}
 	}
 
@@ -91,13 +74,10 @@ public class Patrol : MonoBehaviour
 		while (true)
 		{
 			transform.position = Vector3.MoveTowards(transform.position, targetWaypoint, speed * Time.deltaTime);
-			//anime.SetBool("SetMove", true);
-
 			if (transform.position == targetWaypoint)
 			{
 				targetWaypointIndex = (targetWaypointIndex + 1) % waypoints.Length;
 				targetWaypoint = waypoints[targetWaypointIndex];
-				//anime.SetBool("SetMove", false);
 				yield return new WaitForSeconds(waitTime);
 				yield return StartCoroutine(TurnToFace(targetWaypoint));
 			}
@@ -110,7 +90,7 @@ public class Patrol : MonoBehaviour
 		Vector3 dirToLookTarget = (lookTarget - transform.position).normalized;
 		float targetAngle = 90 - Mathf.Atan2(dirToLookTarget.z, dirToLookTarget.x) * Mathf.Rad2Deg;
 
-		while (Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.y, targetAngle)) > 0.05f)
+		while (Mathf.DeltaAngle(transform.eulerAngles.y, targetAngle) > 0.05f)
 		{
 			float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetAngle, turnSpeed * Time.deltaTime);
 			transform.eulerAngles = Vector3.up * angle;
