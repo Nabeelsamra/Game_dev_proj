@@ -21,11 +21,11 @@ public class Patrol : MonoBehaviour
 	Transform player;
 	Color originalSpotlightColour;
 
-	//private Animator anime;
+	private Animator anime;
 
 	void Start()
 	{
-		//anime = GetComponent<Animator>();
+		anime = GetComponent<Animator>();
 		player = GameObject.FindGameObjectWithTag("Player").transform;
 		viewAngle = spotlight.spotAngle;
 		originalSpotlightColour = spotlight.color;
@@ -91,13 +91,13 @@ public class Patrol : MonoBehaviour
 		while (true)
 		{
 			transform.position = Vector3.MoveTowards(transform.position, targetWaypoint, speed * Time.deltaTime);
-			//anime.SetBool("SetMove", true);
+			anime.SetBool("SetMove", true);
 
 			if (transform.position == targetWaypoint)
 			{
 				targetWaypointIndex = (targetWaypointIndex + 1) % waypoints.Length;
 				targetWaypoint = waypoints[targetWaypointIndex];
-				//anime.SetBool("SetMove", false);
+				anime.SetBool("SetMove", false);
 				yield return new WaitForSeconds(waitTime);
 				yield return StartCoroutine(TurnToFace(targetWaypoint));
 			}
