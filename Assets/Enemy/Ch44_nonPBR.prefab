@@ -1038,7 +1038,7 @@ MonoBehaviour:
   viewDistance: 0
   viewMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   pathHolder: {fileID: 0}
 --- !u!1 &3096616633516678861
 GameObject:
