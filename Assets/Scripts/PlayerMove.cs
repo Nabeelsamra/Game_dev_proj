@@ -18,9 +18,12 @@ public class PlayerMove : MonoBehaviour
     [SerializeField]
     private Transform cameraTransform;
 
+    private Animator anime;
+
     // Start is called before the first frame update
     void Start()
     {
+        anime = GetComponent<Animator>();
         rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -37,6 +40,15 @@ public class PlayerMove : MonoBehaviour
         angle = Mathf.LerpAngle(angle, targetAngle, Time.deltaTime * turnSpeed * inputMagnitude);
 
         velocity = transform.forward * moveSpeed * smoothInputMagnitude;
+
+        if(inputDirection != Vector3.zero)
+        {
+            anime.SetBool("SetMove", true);
+        }
+        else
+        {
+            anime.SetBool("SetMove", false);
+        }
     }
 
     void FixedUpdate()
